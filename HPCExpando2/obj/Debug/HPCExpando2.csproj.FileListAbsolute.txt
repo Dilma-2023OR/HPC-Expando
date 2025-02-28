@@ -1,0 +1,10 @@
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\HPCExpando2.exe.config
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\HPCExpando2.exe
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\HPCExpando2.pdb
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.csproj.AssemblyReference.cache
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.Form1.resources
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.Properties.Resources.resources
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.csproj.GenerateResource.cache
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.csproj.CoreCompileInputs.cache
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.exe
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.pdb
