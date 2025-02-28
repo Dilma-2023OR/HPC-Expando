@@ -176,6 +176,39 @@ namespace HPCExpando2
                 tbCantidad.Width = 158;
 
                 dataGridView1.Columns.Add(tbCantidad);
+
+                //Temporal Data
+                string dBMsg = string.Empty;
+                int dBError = 0;
+
+                //Data Base Connection 
+                DBConnection dB = new DBConnection();
+                DataTable dtResult = new DataTable();
+
+                dB.dataBase = "datasource=mlxgumvlptfrd01.molex.com;port=3306;username=ftest;password=Ftest123#;database=runcard_tempflex;";
+                dB.query = "SELECT partnum FROM runcard_tempflex.prod_master_config"
+                         + " INNER JOIN runcard_tempflex.prod_step_config ON runcard_tempflex.prod_step_config.prr_config_id = runcard_tempflex.prod_master_config.prr_config_id AND runcard_tempflex.prod_step_config.prr_config_rev = runcard_tempflex.prod_master_config.prr_config_rev"
+                         + " WHERE status = \"ACTIVE\" AND opcode = \"" + opcode + "\" AND part_class IN ('" + partClass + "');";
+                var dBResult = dB.getData(out dBMsg, out dBError);
+
+                if (dBError != 0)
+                {
+                    //Control Adjust
+                    cBoxPartNum.Enabled = false;
+
+                    //Feedback
+                    Message message = new Message(dBMsg);
+                    message.ShowDialog();
+                    return;
+                }
+
+                //Fill Data Table
+                dBResult.Fill(dtResult);
+                foreach (DataRow row in dtResult.Rows)
+                {
+                    if (!cBoxPartNum.Items.Contains(row.ItemArray[0]))
+                        cBoxPartNum.Items.Add(row.ItemArray[0]);
+                }
             }
             catch (Exception ex)
             {
