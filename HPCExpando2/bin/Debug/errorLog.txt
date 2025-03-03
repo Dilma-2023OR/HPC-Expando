@@ -1,0 +1,2 @@
+28-02-2025 12:54:05,Error al obtener la configuración:La columna proporcionada ya pertenece al control DataGridView.
+28-02-2025 13:46:12,Error al obtener la configuración:No se pudo encontrar el archivo '\\gumfp01\group\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\config.ini'.

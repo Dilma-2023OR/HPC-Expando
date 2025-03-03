@@ -17,7 +17,7 @@ namespace HPCExpando2
     public partial class Form1 : Form
     {
         //Config Connection
-        INIFile localConfig = new INIFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\HPC Consume\config.ini");
+        INIFile localConfig = new INIFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + @"\HPCExpando2\config.ini");
 
         //Runcard Connection
         runcard_wsdlPortTypeClient client = new runcard_wsdlPortTypeClient("runcard_wsdlPort");
@@ -108,18 +108,18 @@ namespace HPCExpando2
                     File.Copy(Directory.GetCurrentDirectory() + "\\config.ini", localConfig.FilePath);
                 }
 
-                dataGridView1.DefaultCellStyle.Font = new Font("Franklin Gothic Medium Cond", 13.8F);
+                dataGridView1.DefaultCellStyle.Font = new Font("Ebrima", 12F, FontStyle.Bold);
                 dataGridView1.DefaultCellStyle.ForeColor = Color.Black;
-                dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Ebrima", 19.8000011F, FontStyle.Bold);
+                dataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 16F, FontStyle.Bold);
                 dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
                 dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
 
                 //formato Datagrid2
 
-                dataGridView2.DefaultCellStyle.Font = new Font("Franklin Gothic Medium Cond", 13.8F);
+                dataGridView2.DefaultCellStyle.Font = new Font("Ebrima", 12F, FontStyle.Bold);
                 dataGridView2.DefaultCellStyle.ForeColor = Color.Black;
-                dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font("Ebrima", 19.8000011F, FontStyle.Bold);
+                dataGridView2.ColumnHeadersDefaultCellStyle.Font = new Font("Century Gothic", 16F, FontStyle.Bold);
                 dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
                 dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
@@ -136,14 +136,8 @@ namespace HPCExpando2
                 lblMessage2.Text = "";
 
                 dataGridView1.Dock = DockStyle.Fill;
+                dataGridView2.Dock = DockStyle.Fill;
 
-                DataGridViewTextBoxColumn tbId = new DataGridViewTextBoxColumn();
-                tbId.HeaderText = "ID";
-                tbId.Name = "ID";
-                tbId.FillWeight = 50;
-                tbId.Width = 144;
-
-                dataGridView1.Columns.Add(tbId);
 
                 DataGridViewTextBoxColumn tbMaterial = new DataGridViewTextBoxColumn();
                 tbMaterial.HeaderText = "Material";
@@ -176,6 +170,39 @@ namespace HPCExpando2
                 tbCantidad.Width = 158;
 
                 dataGridView1.Columns.Add(tbCantidad);
+
+
+                DataGridViewTextBoxColumn tbMaterialB = new DataGridViewTextBoxColumn();
+                tbMaterialB.HeaderText = "Material";
+                tbMaterialB.Name = "Material";
+                tbMaterialB.FillWeight = 100;
+                tbMaterialB.Width = 287;
+
+                dataGridView2.Columns.Add(tbMaterialB);
+
+                DataGridViewTextBoxColumn tbRevB = new DataGridViewTextBoxColumn();
+                tbRevB.HeaderText = "Rev";
+                tbRevB.Name = "Rev";
+                tbRevB.FillWeight = 50;
+                tbRevB.Width = 144;
+
+                dataGridView2.Columns.Add(tbRevB);
+
+                DataGridViewTextBoxColumn tbUniqueIdB = new DataGridViewTextBoxColumn();
+                tbUniqueIdB.HeaderText = "Batch B";
+                tbUniqueIdB.Name = "Batch B";
+                tbUniqueIdB.FillWeight = 100;
+                tbUniqueIdB.Width = 288;
+
+                dataGridView2.Columns.Add(tbUniqueIdB);
+
+                DataGridViewTextBoxColumn tbCantidadB = new DataGridViewTextBoxColumn();
+                tbCantidadB.HeaderText = "Cantidad";
+                tbCantidadB.Name = "Cantidad";
+                tbCantidadB.FillWeight = 55;
+                tbCantidadB.Width = 158;
+
+                dataGridView2.Columns.Add(tbCantidadB);
 
                 //Temporal Data
                 string dBMsg = string.Empty;
@@ -212,7 +239,191 @@ namespace HPCExpando2
             }
             catch (Exception ex)
             {
-                
+                //Control Adjust
+                cBoxPartNum.Enabled = false;
+
+                //Feedback
+                Message message = new Message("Error al obtener la configuración");
+                message.ShowDialog();
+
+                //Log
+                File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al obtener la configuración:" + ex.Message + "\n");
+            }
+        }
+
+        private void cBoxPartNum_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cBoxPartNum.Text != string.Empty)
+            {
+                try
+                {
+                    //Clear Save Data
+                    cBoxWorkOrder.Items.Clear();
+
+                    //Get Work Orders
+                    var getWorkOrders = client.getAvailableWorkOrders(cBoxPartNum.Text, "", out error, out msg);
+
+                    foreach (workOrderItem order in getWorkOrders)
+                        if (!cBoxWorkOrder.Items.Contains(order.workorder))
+                            cBoxWorkOrder.Items.Add(order.workorder);
+
+                    //Control Adjust
+                    cBoxWorkOrder.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    //Feedback
+                    Message message = new Message("Error al obtener las ordenes");
+                    message.ShowDialog();
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al obtener las ordenes:" + ex.Message + "\n");
+                }
+            }
+        }
+
+        private void cBoxWorkOrder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cBoxWorkOrder.Text != string.Empty)
+            {
+                //Control Adjust
+                dataGridView1.Controls.Clear();
+
+                try
+                {
+                    //Get BOM
+                    getBOM = client.getUnitBOMConsumption(cBoxWorkOrder.Text, seqnum, out error, out msg);
+
+                    if (getBOM.Length == 0)
+                    {
+                        Message message = new Message("La orden actual no cuenta con BOM");
+                        message.ShowDialog();
+
+                        //Log
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",La orden actual no cuenta con BOM\n");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Retroalimentación
+                    Message message = new Message("Error al obtener el BOM");
+                    message.ShowDialog();
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al obtener el BOM:" + ex.Message + "\n");
+                    return;
+                }
+
+                //Internal Counter
+                int bom = 0;
+                int row = 0;
+                int col = 0;
+
+
+
+                foreach (unitBOM item in getBOM)
+                {
+                    if (item.alt_for_item == 0)
+                    {
+                        dataGridView1.Rows.Add(item.partnum, item.partrev, "-", "-");
+                        dataGridView2.Rows.Add(item.partnum, item.partrev, "-", "-");
+
+                        bomCount++;
+                        bom++;
+                        foreach (unitBOM subItem in getBOM)
+                        {
+                            if (subItem.alt_for_item == item.item)
+                            {
+                                //In case of altern add it
+                                dataGridView1.Rows[0].Cells[bomCount - 1].Value = dataGridView1.Rows[0].Cells[bomCount - 1].Value + "\n" + subItem.partnum;
+                                dataGridView1.Rows[1].Cells[bomCount - 1].Value = dataGridView1.Rows[1].Cells[bomCount - 1].Value + "\n" + subItem.partrev;
+
+                                dataGridView2.Rows[0].Cells[bomCount - 1].Value = dataGridView2.Rows[0].Cells[bomCount - 1].Value + "\n" + subItem.partnum;
+                                dataGridView2.Rows[1].Cells[bomCount - 1].Value = dataGridView2.Rows[1].Cells[bomCount - 1].Value + "\n" + subItem.partrev;
+                                break;
+                            }
+                        }
+                    }
+                    //habilitar barras de desplazamiento si el contenido excede el tamaño del datagridview
+
+                    cBoxWorkOrder.Enabled = false;
+                    cBoxPartNum.Enabled = false;
+                    dataGridView1.ResumeLayout();
+                    btnChange.Enabled = true;
+
+                    dataGridView1.ScrollBars = ScrollBars.Both;
+                    dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                }
+
+                //Check Data
+                checkBOMData();
+            }
+        }
+
+        private void checkBOMData()
+        {
+            //temporal Data
+            string missing = "";
+            string desc = "";
+            for (int x=0; x < getBOM.Length; x++)
+            {
+                var CellValue = dataGridView1.Rows[x].Cells[2].Value;
+                if (CellValue.ToString() == "-") 
+                    missing = missing + "-" + dataGridView1.Rows[x].Cells[0].Value.ToString();
+
+                var CellValue1 = dataGridView2.Rows[x].Cells[2].Value;
+                if (CellValue1.ToString() == "-")
+                    missing = missing + "-" + dataGridView2.Rows[x].Cells[0].Value.ToString();
+            }
+
+            if (missing.Length == 0)
+            {
+                //Control Adjust
+                cBoxWorkOrder.Enabled = false;
+                cBoxPartNum.Enabled = false;
+                tBoxLabelA.Enabled = true;
+                tBoxLabelB.Enabled = true;
+                tBoxReelA.Enabled = true;
+                tBoxReelB.Enabled = false;
+                btnChange.Enabled = true;
+                tBoxLabelA.Focus();
+
+                return;
+            }
+            foreach (char c in missing)
+                if (!char.IsControl(c))
+                    desc = desc + c;
+                else if (c.Equals('\n'))
+                    desc = desc + "/";
+
+
+            //Control Adjust
+            tBoxLabelA.Enabled = false;
+            tBoxLabelB.Enabled = false;
+            tBoxReelB.Enabled = false;
+            tBoxReelA.Enabled = true;
+            tBoxReelA.Focus();
+        }
+
+        private void tBoxReelA_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter & tBoxReelA.Text != string.Empty)
+            {
+                try
+                {
+                    //Boleana
+                    bool partBOM = false;
+
+                    //Almacena el valor escaneado
+                    string scanInfo = "";
+
+                    tBoxLabelA.Enabled = false;
+                    valExist = false;
+
+                    errExpendor = 0;
+                }
+                catch { }
             }
         }
     }
