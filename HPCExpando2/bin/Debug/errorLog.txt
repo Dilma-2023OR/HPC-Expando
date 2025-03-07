@@ -1,2 +1,6 @@
 28-02-2025 12:54:05,Error al obtener la configuración:La columna proporcionada ya pertenece al control DataGridView.
 28-02-2025 13:46:12,Error al obtener la configuración:No se pudo encontrar el archivo '\\gumfp01\group\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\config.ini'.
+07-03-2025 13:06:03Serial 000003592 YA registrado:'000003592' is already registered.  Please revise input selections accordingly.
+07-03-2025 13:06:35Serial 1000000096 YA registrado:'1000000096' is already registered.  Please revise input selections accordingly.
+07-03-2025 13:11:29,Pase NO otorgado al serial 1000000096:Cannot process inventory consumption for serial 2434022418, part-rev 302282X040-02: not set as consumable.
+07-03-2025 13:30:27,Error al consultar el status del serial 1000000138	:Índice fuera de los límites de la matriz.

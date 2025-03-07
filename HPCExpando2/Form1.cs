@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace HPCExpando2
         int contDatagrid = 0;
         int etiqExpandor = 0;
         int errExpendor = 0;
+        bool BatchBActivo = false;
 
         public Form1()
         {
@@ -422,9 +424,883 @@ namespace HPCExpando2
                     valExist = false;
 
                     errExpendor = 0;
+
+                    //Limpieza de controles
+                    foreach (char c in tBoxReelA.Text)
+                    {
+                        if (!char.IsControl(c))
+                        {
+                            scanInfo = scanInfo + c;
+                        }
+                    }
+
+                    try
+                    {
+                        if (scanInfo != "")
+                        {
+                            //Busqueda de la información del ID
+                            var fetchInv = client.fetchInventoryItems(scanInfo, "", "", "", "", "", 0, "", "", out error, out msg);
+
+                            //Si no falla y existe
+                            if (error == 0 & fetchInv.Length > 0)
+                            {
+                                string partStatus = fetchInv[0].status;
+                                string partNum = fetchInv[0].partnum;
+                                string partRev = fetchInv[0].partrev;
+                                string serial = fetchInv[0].serial;
+                                float quantity = fetchInv[0].qty;
+
+                                //Si la cantidad es mayor a 0 y esta disponible/Si la cantidad es mayor a 0 y esta recibido
+                                if (quantity > 0 & partStatus == "COMPLETE" || partStatus == "AVAILABLE")
+                                {
+                                    //Por cada unidad del BOM
+                                    foreach (unitBOM unit in getBOM)
+                                    {
+                                        //Sí el número de parte escaneado fue encontrado en el BOM
+                                        if (unit.partnum == partNum & unit.partrev == partRev)
+                                        {
+                                            //Activa la Boleana
+                                            partBOM = true;
+                                            break;
+                                        }
+                                    }
+
+                                    foreach (var item in getBOM)
+                                    {
+                                        if (item.partnum == fetchInv[0].partnum && item.partrev == fetchInv[0].partrev)
+                                        {
+                                            valExist = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (partBOM)
+                                    {
+                                        //se recorre cada fila
+                                        for (int x = 0; x < bomCount; x++)
+                                        {
+                                            string PART = dataGridView1.Rows[x].Cells[0].Value.ToString();
+                                            string REVISION = dataGridView1.Rows[x].Cells[1].Value.ToString();
+                                            //Si el valor de la posicion contiene el número de parte y revisión
+                                            if(PART == fetchInv[0].partnum & REVISION == fetchInv[0].partrev)
+                                            {
+                                                //Si la posicion de la tabla no ha sido asignado
+                                                if (dataGridView1.Rows[x].Cells[2].Value.ToString() == "-" & dataGridView1.Rows[x].Cells[3].Value.ToString() =="-")
+                                                {
+                                                    //Añade los datos 
+                                                    dataGridView1.Rows[x].Cells[2].Value = serial;
+                                                    dataGridView1.Rows[x].Cells[3].Value = quantity.ToString();
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    Message message1 = new Message(scanInfo + " ya escaneado.");
+                                                    message1.ShowDialog();
+                                                    break;
+                                                }
+                                            }else if (dataGridView1.Rows[x].Cells[0].Value.ToString().Contains(partNum) & !dataGridView1.Rows[x].Cells[1].Value.ToString().Contains(partRev))
+                                            {
+                                                Message message2 = new Message("El número de parte escaneado no pertenece al BOM " + scanInfo + "," + partNum + "-" + partRev + ", notificar.");
+                                                message2.ShowDialog();
+                                                errExpendor = 1;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Message message = new Message("El número de parte escaneado no pertenece al BOM " + scanInfo + "," + partNum + "-" + partRev + ", notificar.");
+                                        message.ShowDialog();
+                                        errExpendor = 1;
+                                    }
+                                }
+                                else
+                                {
+                                    Message message = new Message(scanInfo + ", cantidad " + quantity + ", " + fetchInv[0].status + ".");
+                                    message.ShowDialog();
+                                    errExpendor = 1;
+
+
+                                }
+                            }
+                            else
+                            {
+                                //Log
+                                File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", Serial no registrado en sistema.\n");
+
+                                Message message = new Message(scanInfo + ", Serial no registrado en sistema.");
+                                message.ShowDialog();
+                                errExpendor = 1;
+                            }
+                        }
+                        tLayoutMessageA.BackColor = Color.White;
+                        lblMessage.Text = "";
+
+                        //Check Data
+                        //checkBOMData();
+                        if (errExpendor == 0)
+                        {
+                            //Control Adjust
+                            tBoxReelA.Clear();
+                            tBoxReelA.Enabled = false;
+                            tBoxLabelA.Enabled = true;
+                            btnLimpiarA.Enabled = true;
+                            tBoxLabelA.Clear();
+                            tBoxLabelA.Focus();
+                        }
+                        else
+                        {
+                            tBoxReelA.Clear();
+                            tBoxReelA.Focus();
+                        }
+                        
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        //Log
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.\n");
+
+                        Message message = new Message(scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.");
+                        message.ShowDialog();
+                        errExpendor = 1;
+                        
+                    }
                 }
-                catch { }
+                catch (Exception ex){
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al consultar el status del serial " + ex.Message + "\n");
+                }
             }
+        }
+
+        private void tBoxLabelA_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter & tBoxLabelA.Text != string.Empty) {
+
+                BatchBActivo = false;
+                //temporal Data
+                int response = 0;
+
+                //Register Unit
+                serialRegister(tBoxLabelA.Text, out  response);
+
+                if (response != 0) {
+                    //Control Adjust
+                    tBoxLabelA.Clear();
+                    tBoxLabelA.Focus();
+                    return;
+                }
+
+                //Transaction Unit
+                serialTransaction(tBoxLabelA.Text, out response);
+
+                if (response != 0) {
+                    //Control Adjust
+                    tBoxLabelA.Clear();
+                    tBoxLabelA.Focus();
+                    return;
+                }
+
+                //Control Adjust
+                tBoxLabelA.Enabled = false;
+                tBoxReelA.Enabled = false;
+                tBoxLabelA.Clear();
+                tBoxReelA.Clear();
+                tBoxReelB.Enabled = true;
+                tBoxReelB.Focus();
+            }
+        }
+
+        private void serialRegister(string serial, out int response)
+        {
+            int register = -1;
+            response = 0;
+            int qty = 0;
+
+            try
+            {
+                qty = 1;
+
+                register = client.registerUnitToWorkOrder(cBoxWorkOrder.Text, serial, qty, "", "", "WIP", "PRODUCTION FLOOR", "ftest", out string msg);
+
+                if (error != 0) { 
+                    //Retroalimentación
+                    Message message = new Message("Error al registrar el serial " + serial);
+                    message.ShowDialog();
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al registrar el serial " + serial + ":" + msg + "\n");
+
+                    //Response
+                    response = -1;
+                    return;
+                }
+
+                if (msg.Contains("is already registered"))
+                {
+                    //Retroalimentación 
+                    Message message = new Message("Serial " + serial + " Ya registrado");
+                    message.ShowDialog();
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "Serial " + serial + " YA registrado:" + msg + "\n");
+
+                    response = -1;
+                    return;
+                }
+            }
+            catch (Exception ex) {
+                //Feedback
+                Message message = new Message("Error al registar el serial " + serial);
+                message.ShowDialog();
+
+                //Log
+                File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al registar el serial " + serial + ":" + ex.Message + "\n");
+
+                //Response
+                response = -1;
+            }
+        }
+
+        private void serialTransaction(string serial, out int response) {
+            InventoryItem[] fetchInv = null;
+            string workorder = string.Empty;
+            string operation = string.Empty;
+            string partnum = string.Empty;
+            string partrev = string.Empty; 
+            string status = string.Empty;
+            int step = 0;
+
+            //Response
+            response = 0;
+
+            try
+            {
+                fetchInv = client.fetchInventoryItems(serial, "", "", "", "", "", 0, "", "", out error, out msg);
+                workorder = fetchInv[0].workorder;
+                operation = fetchInv[0].opcode;
+                partnum = fetchInv[0].partnum;
+                partrev = fetchInv[0].partrev;
+                status = fetchInv[0].status;
+                step = fetchInv[0].seqnum;
+            }
+            catch (Exception ex) {
+                //Feedback
+                Message message = new Message("Error al consultar el status del serial " + serial);
+                message.ShowDialog();
+
+                //Log
+                File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al consultar el status del serial " + serial + ":" + ex.Message + "\n");
+
+                //Response
+                response = -1;
+                return;
+            }
+
+            if (status == "IN QUEUE" & operation == opcode | status == "IN PROGRESS" & operation == opcode)
+            {
+                //Transaction Item
+                transactionItem transitem = new transactionItem();
+                transitem.workorder = cBoxWorkOrder.Text;
+                transitem.warehouseloc = warehouseLoc;
+                transitem.warehousebin = warehouseBin;
+                transitem.username = "ftest";
+                transitem.machine_id = machineId;
+                transitem.transaction = "MOVE";
+                transitem.opcode = operation;
+                transitem.serial = serial;
+                transitem.trans_qty = 1;
+                transitem.seqnum = step;
+                transitem.comment = "TRANSACCION HECHA POR SISTEMA";
+
+                //Data/BOM Item
+                bomItem[] bomData = new bomItem[getBOM.Length];
+                dataItem[] inputData = new dataItem[] { };
+
+                //Counter
+                int bom = 0;
+
+                //Seriales para retirar
+                List<string> partToRemove = new List<string>();
+                string partnum1 = string.Empty;
+                string uniqueId = string.Empty;
+                int cantidad = 0;
+                string rev = string.Empty;
+                if (BatchBActivo == false)
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        uniqueId = row.Cells[2].Value.ToString();
+                        partnum1 = row.Cells[0].Value.ToString();
+                        rev = row.Cells[1].Value.ToString();
+
+                        cantidad = Convert.ToInt32(row.Cells[3].Value.ToString());
+                        etiqExpandor++;
+
+                        //Load BOM
+                        bomData[bom] = new bomItem();
+                        bomData[bom].item_serial = uniqueId;
+                        bomData[bom].item_partnum = partnum1;
+                        bomData[bom].item_partrev = rev;
+
+                        foreach (unitBOM part in getBOM)
+                            if (partnum1 == part.partnum)
+                            {
+                                bomData[bom].item_qty = 1;
+                                //Por cada pieza del BOM
+                                for (int x = 0; x < dataGridView1.Rows.Count; x++)
+                                {
+                                    //Si el número de parte coincide con el encontrado
+                                    if (partnum1.Contains(part.partnum))
+                                    {
+                                        if (uniqueId.ToString() != "-")
+                                        {
+                                            cantidad = (cantidad - Convert.ToInt32(part.qty));
+                                            //Si el id expiro
+                                            if (cantidad <= 0)
+                                            {
+                                                //Reinicia los valores del campo
+                                                dataGridView1.Rows[x].Cells[2].Value = "-";
+                                                dataGridView1.Rows[x].Cells[3].Value = "-";
+
+                                                //
+                                                partToRemove.Add(part.partnum);
+
+                                                tBoxLabelA.Enabled = true;
+                                            }
+                                            dataGridView1.Rows[x].Cells[3].Value = Convert.ToString(cantidad);
+                                        }
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        //Count
+                        bom++;
+                        if (dataGridView1.Rows.Count == 0)
+                            break;
+                    }
+
+                }
+                else
+                {
+                    foreach (DataGridViewRow row in dataGridView2.Rows)
+                    {
+                        uniqueId = row.Cells[2].Value.ToString();
+                        partnum1 = row.Cells[0].Value.ToString();
+                        rev = row.Cells[1].Value.ToString();
+
+                        cantidad = Convert.ToInt32(row.Cells[3].Value.ToString());
+                        etiqExpandor++;
+
+                        //Load BOM
+                        bomData[bom] = new bomItem();
+                        bomData[bom].item_serial = uniqueId;
+                        bomData[bom].item_partnum = partnum1;
+                        bomData[bom].item_partrev = rev;
+
+                        foreach (unitBOM part in getBOM)
+                            if (partnum1 == part.partnum)
+                            {
+                                bomData[bom].item_qty = 1;
+                                //Por cada pieza del BOM
+                                for (int x = 0; x < dataGridView2.Rows.Count; x++)
+                                {
+                                    //Si el número de parte coincide con el encontrado
+                                    if (partnum1.Contains(part.partnum))
+                                    {
+                                        if (uniqueId.ToString() != "-")
+                                        {
+                                            cantidad = (cantidad - Convert.ToInt32(part.qty));
+                                            //Si el id expiro
+                                            if (cantidad <= 0)
+                                            {
+                                                //Reinicia los valores del campo
+                                                dataGridView2.Rows[x].Cells[2].Value = "-";
+                                                dataGridView2.Rows[x].Cells[3].Value = "-";
+
+                                                //
+                                                partToRemove.Add(part.partnum);
+
+                                                tBoxLabelB.Enabled = true;
+                                            }
+                                            dataGridView2.Rows[x].Cells[3].Value = Convert.ToString(cantidad);
+                                        }
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        //Count
+                        bom++;
+                        if (dataGridView2.Rows.Count == 0)
+                            break;
+                    }
+                }
+                try
+                {
+                    //Transaction
+                    var transaction = client.transactUnit(transitem, inputData, bomData, out msg);
+
+                    //MessageBox.Show(msg);
+                    if (!msg.Contains("ADVANCE"))
+                    {
+                        if (BatchBActivo == false)
+                        {
+                            //Feedback
+                            lblMessage.Text = "Pase NO otorgado al serial " + serial;
+                            tLayoutMessageA.BackColor = Color.Crimson;
+                            MostrarMensajeFlotanteNoPass(" NO PASS");
+                        }
+                        else
+                        {
+                            //Feedback
+                            lblMessage2.Text = "Pase NO otorgado al serial " + serial;
+                            panelBatchB.BackColor = Color.Crimson;
+                            MostrarMensajeFlotanteNoPass(" NO PASS");
+                        }
+
+                        //Log
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Pase NO otorgado al serial " + serial + ":" + msg + "\n");
+
+                        //Response
+                        response = -1;
+                        return;
+                    }
+
+                    if (BatchBActivo == false)
+                    {
+                        //Feedback
+                        lblMessage.Text = "Serial " + serial + " Completado";
+                        tLayoutMessageA.BackColor = Color.FromArgb(58, 196, 123);
+                        MostrarMensajeFlotante("P A S S");
+                    }
+                    else
+                    {
+                        //Feedback
+                        lblMessage2.Text = "Serial " + serial + " Completado";
+                        panelBatchB.BackColor = Color.FromArgb(58, 196, 123);
+                        MostrarMensajeFlotante("P A S S");
+                    }
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\Log.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "," + msg + "\n");
+                }
+                catch (Exception ex)
+                {
+                    //Feedback
+                    Message message = new Message("Error al dar el pase al serial " + serial);
+                    message.ShowDialog();
+
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al dar el pase al serial " + serial + ":" + ex.Message + "\n");
+                    //Response
+                    response = -1;
+                    return;
+                }
+            }
+            else
+            {
+                //Get Instructions
+                var getInstructions = client.getWorkOrderStepInstructions(cBoxWorkOrder.Text, step.ToString(), out error, out msg);
+
+                //Feedback
+                lblMessage.Text = "Serial " + serial + " sin flujo, " + status + ":" + getInstructions.opdesc;
+                tLayoutMessageA.BackColor = Color.Crimson;
+
+                //Response
+                response = -1;
+            }
+        }
+
+        // Método para mostrar el mensaje flotante gigante
+        private void MostrarMensajeFlotante(string mensaje)
+        {
+            // Crear un formulario emergente flotante
+            Form flotanteForm = new Form();
+            flotanteForm.FormBorderStyle = FormBorderStyle.None;  // Sin bordes
+            flotanteForm.StartPosition = FormStartPosition.CenterScreen;  // Centrado en la pantalla
+            flotanteForm.BackColor = Color.Green;  // Fondo verde (puedes cambiar el color)
+            flotanteForm.Opacity = 0.9;  // Opacidad para hacerlo semitransparente
+            flotanteForm.TopMost = true;  // Asegura que esté sobre otras ventanas
+            flotanteForm.Width = 600;  // Ancho de la ventana flotante
+            flotanteForm.Height = 200;  // Alto de la ventana flotante
+
+            // Crear un label para mostrar el mensaje
+            Label mensajeLabel = new Label();
+            mensajeLabel.AutoSize = false;
+            mensajeLabel.Size = new Size(flotanteForm.Width, flotanteForm.Height);
+            mensajeLabel.Text = mensaje;
+            mensajeLabel.Font = new Font("Arial", 48, FontStyle.Bold);  // Tamaño grande de la fuente
+            mensajeLabel.ForeColor = Color.White;  // Color de texto blanco
+            mensajeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;  // Centrado en el label
+
+            // Añadir el label al formulario flotante
+            flotanteForm.Controls.Add(mensajeLabel);
+
+            // Mostrar el mensaje durante 3 segundos y luego cerrar
+            flotanteForm.Show();
+            Timer timer = new Timer();
+            timer.Interval = 3000;  // 3000 milisegundos = 3 segundos
+            timer.Tick += (sender, e) =>
+            {
+                flotanteForm.Close();
+                timer.Stop();
+            };
+            timer.Start();
+        }
+
+        private void MostrarMensajeFlotanteNoPass(string mensaje)
+        {
+            // Crear un formulario emergente flotante
+            Form flotanteForm = new Form();
+            flotanteForm.FormBorderStyle = FormBorderStyle.None;  // Sin bordes
+            flotanteForm.StartPosition = FormStartPosition.CenterScreen;  // Centrado en la pantalla
+            flotanteForm.BackColor = Color.Red;  // Fondo verde (puedes cambiar el color)
+            flotanteForm.Opacity = 0.9;  // Opacidad para hacerlo semitransparente
+            flotanteForm.TopMost = true;  // Asegura que esté sobre otras ventanas
+            flotanteForm.Width = 600;  // Ancho de la ventana flotante
+            flotanteForm.Height = 200;  // Alto de la ventana flotante
+
+            // Crear un label para mostrar el mensaje
+            Label mensajeLabel = new Label();
+            mensajeLabel.AutoSize = false;
+            mensajeLabel.Size = new Size(flotanteForm.Width, flotanteForm.Height);
+            mensajeLabel.Text = mensaje;
+            mensajeLabel.Font = new Font("Arial", 48, FontStyle.Bold);  // Tamaño grande de la fuente
+            mensajeLabel.ForeColor = Color.White;  // Color de texto blanco
+            mensajeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;  // Centrado en el label
+
+            // Añadir el label al formulario flotante
+            flotanteForm.Controls.Add(mensajeLabel);
+
+            // Mostrar el mensaje durante 3 segundos y luego cerrar
+            flotanteForm.Show();
+            Timer timer = new Timer();
+            timer.Interval = 3000;  // 3000 milisegundos = 3 segundos
+            timer.Tick += (sender, e) =>
+            {
+                flotanteForm.Close();
+                timer.Stop();
+            };
+            timer.Start();
+        }
+
+        private void tBoxReelB_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (e.KeyCode == Keys.Enter & tBoxReelB.Text != string.Empty)
+            {
+                try
+                {
+                    //Boleana
+                    bool partBOM = false;
+
+                    //Almacena el valor escaneado
+                    string scanInfo = "";
+
+                    tBoxLabelB.Enabled = false;
+                    valExist = false;
+
+                    errExpendor = 0;
+
+                    //Limpieza de controles
+                    foreach (char c in tBoxReelB.Text)
+                    {
+                        if (!char.IsControl(c))
+                        {
+                            scanInfo = scanInfo + c;
+                        }
+                    }
+
+                    try
+                    {
+                        if (scanInfo != "")
+                        {
+                            //Busqueda de la información del ID
+                            var fetchInv = client.fetchInventoryItems(scanInfo, "", "", "", "", "", 0, "", "", out error, out msg);
+
+                            //Si no falla y existe
+                            if (error == 0 & fetchInv.Length > 0)
+                            {
+                                string partStatus = fetchInv[0].status;
+                                string partNum = fetchInv[0].partnum;
+                                string partRev = fetchInv[0].partrev;
+                                string serial = fetchInv[0].serial;
+                                float quantity = fetchInv[0].qty;
+
+                                //Si la cantidad es mayor a 0 y esta disponible/Si la cantidad es mayor a 0 y esta recibido
+                                if (quantity > 0 & partStatus == "COMPLETE" || partStatus == "AVAILABLE")
+                                {
+                                    //Por cada unidad del BOM
+                                    foreach (unitBOM unit in getBOM)
+                                    {
+                                        //Sí el número de parte escaneado fue encontrado en el BOM
+                                        if (unit.partnum == partNum & unit.partrev == partRev)
+                                        {
+                                            //Activa la Boleana
+                                            partBOM = true;
+                                            break;
+                                        }
+                                    }
+
+                                    foreach (var item in getBOM)
+                                    {
+                                        if (item.partnum == fetchInv[0].partnum && item.partrev == fetchInv[0].partrev)
+                                        {
+                                            valExist = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (partBOM)
+                                    {
+                                        //se recorre cada fila
+                                        for (int x = 0; x < bomCount; x++)
+                                        {
+                                            string PART = dataGridView2.Rows[x].Cells[0].Value.ToString();
+                                            string REVISION = dataGridView2.Rows[x].Cells[1].Value.ToString();
+                                            //Si el valor de la posicion contiene el número de parte y revisión
+                                            if (PART == fetchInv[0].partnum & REVISION == fetchInv[0].partrev)
+                                            {
+                                                //Si la posicion de la tabla no ha sido asignado
+                                                if (dataGridView2.Rows[x].Cells[2].Value.ToString() == "-" & dataGridView2.Rows[x].Cells[3].Value.ToString() == "-")
+                                                {
+                                                    //Añade los datos 
+                                                    dataGridView2.Rows[x].Cells[2].Value = serial;
+                                                    dataGridView2.Rows[x].Cells[3].Value = quantity.ToString();
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    Message message1 = new Message(scanInfo + " ya escaneado.");
+                                                    message1.ShowDialog();
+                                                    break;
+                                                }
+                                            }
+                                            else if (dataGridView2.Rows[x].Cells[0].Value.ToString().Contains(partNum) & !dataGridView2.Rows[x].Cells[1].Value.ToString().Contains(partRev))
+                                            {
+                                                Message message2 = new Message("El número de parte escaneado no pertenece al BOM " + scanInfo + "," + partNum + "-" + partRev + ", notificar.");
+                                                message2.ShowDialog();
+                                                errExpendor = 1;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Message message = new Message("El número de parte escaneado no pertenece al BOM " + scanInfo + "," + partNum + "-" + partRev + ", notificar.");
+                                        message.ShowDialog();
+                                        errExpendor = 1;
+                                    }
+                                }
+                                else
+                                {
+                                    Message message = new Message(scanInfo + ", cantidad " + quantity + ", " + fetchInv[0].status + ".");
+                                    message.ShowDialog();
+                                    errExpendor = 1;
+
+
+                                }
+                            }
+                            else
+                            {
+                                //Log
+                                File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", Serial no registrado en sistema.\n");
+
+                                Message message = new Message(scanInfo + ", Serial no registrado en sistema.");
+                                message.ShowDialog();
+                                errExpendor = 1;
+                            }
+                        }
+                        panelBatchB.BackColor = Color.White;
+                        lblMessage2.Text = "";
+
+                        //Check Data
+                        //checkBOMData();
+
+                        if (errExpendor == 0)
+                        {
+                            //Control Adjust
+                            tBoxReelB.Clear();
+                            tBoxReelB.Enabled = false;
+                            tBoxLabelB.Enabled = true;
+                            btnLimpiarB.Enabled = true;
+                            tBoxLabelB.Clear();
+                            tBoxLabelB.Focus();
+                        }
+                        else
+                        {
+                            tBoxReelB.Clear();
+                            tBoxReelB.Focus();
+                        }
+                        
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //Log
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.\n");
+
+                        Message message = new Message(scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.");
+                        message.ShowDialog();
+                        errExpendor = 1;
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + ",Error al consultar el status del serial " + ex.Message + "\n");
+                }
+            }
+            
+        }
+
+        private void tBoxLabelB_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter & tBoxLabelB.Text != string.Empty)
+            {
+                BatchBActivo = true;
+                //temporal Data
+                int response = 0;
+
+                //Register Unit
+                serialRegister(tBoxLabelB.Text, out response);
+
+                if (response != 0)
+                {
+                    //Control Adjust
+                    tBoxLabelB.Clear();
+                    tBoxLabelB.Focus();
+                    return;
+                }
+
+                //Transaction Unit
+                serialTransaction(tBoxLabelB.Text, out response);
+
+                if (response != 0)
+                {
+                    //Control Adjust
+                    tBoxLabelB.Clear();
+                    tBoxLabelB.Focus();
+                    return;
+                }
+
+                //Control Adjust
+                tBoxLabelA.Enabled = false;
+                tBoxReelA.Enabled = true;
+                tBoxLabelB.Clear();
+                tBoxReelB.Clear();
+                tBoxReelB.Enabled = false;
+                tBoxReelA.Focus();
+            }
+        }
+
+        private void btnChange_Click(object sender, EventArgs e)
+        {
+            //Control Adjust
+            tLayoutMessageA.BackColor = Color.White;
+            panelBatchB.BackColor = Color.White;
+            cBoxWorkOrder.SelectedIndex = -1;
+            cBoxPartNum.SelectedIndex = -1;
+            cBoxWorkOrder.Enabled = false;
+            dataGridView1.Rows.Clear();
+            dataGridView2.Rows.Clear();
+            cBoxPartNum.Enabled = true;
+            tBoxLabelA.Enabled = false;
+            tBoxLabelB.Enabled = false;
+            btnChange.Enabled = false;
+            tBoxReelA.Enabled = false;
+            tBoxReelB.Enabled = false;
+            lblMessage.Text = "";
+            lblMessage2.Text = "";
+            bomCount = 0;
+            contador = 0;
+            BatchBActivo = false;
+        }
+
+        private void btnLimpiarA_Click(object sender, EventArgs e)
+        {
+            //Control Adjust
+            tLayoutMessageA.BackColor = Color.White;
+            tBoxLabelA.Enabled = false;
+            btnChange.Enabled = true;
+            tBoxReelA.Enabled = true;
+            lblMessage.Text = "";
+
+
+            for (int x = 0; x < getBOM.Length; x++)
+            {
+                dataGridView1.Rows[x].Cells["UniqueId"].Value = "-";
+                dataGridView1.Rows[x].Cells["Cantidad"].Value = "-";
+
+                contador = 0;
+            }
+            //Check BOM Data
+            checkBOMData();
+            tBoxReelA.Clear();
+            tBoxReelA.Focus();
+        }
+
+        private void btnLimpiarB_Click(object sender, EventArgs e)
+        {
+            //Control Adjust
+            panelBatchB.BackColor = Color.White;
+            tBoxLabelB.Enabled = false;
+            btnChange.Enabled = true;
+            tBoxReelB.Enabled = true;
+            lblMessage2.Text = "";
+
+
+            for (int x = 0; x < getBOM.Length; x++)
+            {
+                dataGridView2.Rows[x].Cells["UniqueId"].Value = "-";
+                dataGridView2.Rows[x].Cells["Cantidad"].Value = "-";
+
+                contador = 0;
+            }
+            //Check BOM Data
+            checkBOMData();
+            tBoxReelB.Clear();
+            tBoxReelB.Focus();
+        }
+
+        private void timerTextReset_Tick(object sender, EventArgs e)
+        {
+            //Timer Stop
+            timerTextReset.Stop();
+
+            if (BatchBActivo == false)
+            {
+                //Control Adjust
+                tLayoutMessageA.BackColor = Color.White;
+                lblMessage.Text = string.Empty;
+            }
+            else {
+                //Control Adjust
+                panelBatchB.BackColor = Color.White;
+                lblMessage2.Text = string.Empty;
+            }
+        }
+
+        private void lblMessage_TextChanged(object sender, EventArgs e)
+        {
+            //Timer Stop
+            timerTextReset.Stop();
+
+            //Control Adjust
+            tLayoutMessageA.BackColor = Color.White;
+            lblMessage.Text = string.Empty;
+        }
+
+        private void lblMessage2_TextChanged(object sender, EventArgs e)
+        {
+            //Timer Stop
+            timerTextReset.Stop();
+
+            //Control Adjust
+            panelBatchB.BackColor = Color.White;
+            lblMessage2.Text = string.Empty;
         }
     }
 }
