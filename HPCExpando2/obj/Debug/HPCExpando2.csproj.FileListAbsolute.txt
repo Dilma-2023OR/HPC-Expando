@@ -54,3 +54,7 @@ G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando
 G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\System.Threading.Tasks.Extensions.xml
 G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpan.6999C3E5.Up2Date
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\HPCExpando2.exe.manifest
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\HPCExpando2.application
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.exe.manifest
+G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\obj\Debug\HPCExpando2.application

@@ -3,6 +3,9 @@
   "WorkspaceRootPath": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|HPCExpando2||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|g:\\programs\\labview\\mes (runcard)\\a. production apps\\hpc\\hpc expandor\\hpcexpando2\\hpcexpando2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|solutionrelative:hpcexpando2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,12 +14,7 @@
       "RelativeMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|solutionrelative:hpcexpando2\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\hpcexpando2\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|solutionrelative:hpcexpando2\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\hpcexpando2\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|solutionrelative:hpcexpando2\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{7FA124ED-3A83-4A7B-A33D-BEE451B15A64}|HPCExpando2\\HPCExpando2.csproj|g:\\programs\\labview\\mes (runcard)\\a. production apps\\hpc\\hpc expandor\\hpcexpando2\\hpcexpando2\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|cc4014f5-b18d-439c-9352-f99d984cca85"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +24,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,7 +40,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "HPCExpando2",
+              "DocumentMoniker": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\HPCExpando2.csproj",
+              "RelativeDocumentMoniker": "HPCExpando2\\HPCExpando2.csproj",
+              "ToolTip": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\HPCExpando2.csproj",
+              "RelativeToolTip": "HPCExpando2\\HPCExpando2.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-07T20:08:15.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Form1.cs",
               "RelativeDocumentMoniker": "HPCExpando2\\Form1.cs",
@@ -54,38 +64,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Message.cs [Design]",
-              "DocumentMoniker": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Message.cs",
-              "RelativeDocumentMoniker": "HPCExpando2\\Message.cs",
-              "ToolTip": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Message.cs [Design]",
-              "RelativeToolTip": "HPCExpando2\\Message.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T16:32:04.777Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Message.cs",
-              "DocumentMoniker": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Message.cs",
-              "RelativeDocumentMoniker": "HPCExpando2\\Message.cs",
-              "ToolTip": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Message.cs",
-              "RelativeToolTip": "HPCExpando2\\Message.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T16:31:45.319Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Form1.cs",
               "DocumentMoniker": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Form1.cs",
               "RelativeDocumentMoniker": "HPCExpando2\\Form1.cs",
               "ToolTip": "G:\\programs\\LABVIEW\\MES (RUNCARD)\\A. Production Apps\\HPC\\HPC Expandor\\HPCExpando2\\HPCExpando2\\Form1.cs",
               "RelativeToolTip": "HPCExpando2\\Form1.cs",
-              "ViewState": "AgIAAEkDAAAAAAAAAAAAAHEDAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAFoCAAAAAAAAAAAmwGUCAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-03T16:26:12.257Z",
               "EditorCaption": ""
