@@ -102,7 +102,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 298);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -118,7 +118,7 @@
             this.tableLayoutPanel2.Controls.Add(this.gbBatchA, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.gbBatchB, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -135,9 +135,9 @@
             this.gbBatchA.Cursor = System.Windows.Forms.Cursors.Default;
             this.gbBatchA.Font = new System.Drawing.Font("MS Reference Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbBatchA.Location = new System.Drawing.Point(4, 4);
-            this.gbBatchA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbBatchA.Margin = new System.Windows.Forms.Padding(4);
             this.gbBatchA.Name = "gbBatchA";
-            this.gbBatchA.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbBatchA.Padding = new System.Windows.Forms.Padding(4);
             this.gbBatchA.Size = new System.Drawing.Size(969, 750);
             this.gbBatchA.TabIndex = 0;
             this.gbBatchA.TabStop = false;
@@ -155,7 +155,7 @@
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.tLayoutMessageA, 0, 6);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 39);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 7;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.62963F));
@@ -172,7 +172,6 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeColumns = false;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -199,9 +198,10 @@
             this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.ActiveBorder;
             this.dataGridView1.Location = new System.Drawing.Point(4, 113);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("MS Reference Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -231,7 +231,7 @@
             this.flowLayoutPanel1.Controls.Add(this.tBoxReelA);
             this.flowLayoutPanel1.Controls.Add(this.btnLimpiarA);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 36);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(939, 69);
             this.flowLayoutPanel1.TabIndex = 1;
@@ -252,7 +252,7 @@
             // 
             this.tBoxReelA.BackColor = System.Drawing.SystemColors.Menu;
             this.tBoxReelA.Location = new System.Drawing.Point(152, 4);
-            this.tBoxReelA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tBoxReelA.Margin = new System.Windows.Forms.Padding(4);
             this.tBoxReelA.Name = "tBoxReelA";
             this.tBoxReelA.Size = new System.Drawing.Size(392, 39);
             this.tBoxReelA.TabIndex = 1;
@@ -268,7 +268,7 @@
             this.btnLimpiarA.Font = new System.Drawing.Font("Ebrima", 5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Millimeter);
             this.btnLimpiarA.ForeColor = System.Drawing.Color.Black;
             this.btnLimpiarA.Location = new System.Drawing.Point(552, 4);
-            this.btnLimpiarA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLimpiarA.Margin = new System.Windows.Forms.Padding(4);
             this.btnLimpiarA.Name = "btnLimpiarA";
             this.btnLimpiarA.Size = new System.Drawing.Size(169, 46);
             this.btnLimpiarA.TabIndex = 8;
@@ -293,7 +293,7 @@
             this.flowLayoutPanel2.Controls.Add(this.label5);
             this.flowLayoutPanel2.Controls.Add(this.tBoxLabelA);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(4, 401);
-            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(939, 68);
             this.flowLayoutPanel2.TabIndex = 4;
@@ -314,7 +314,7 @@
             // 
             this.tBoxLabelA.BackColor = System.Drawing.SystemColors.Menu;
             this.tBoxLabelA.Location = new System.Drawing.Point(190, 4);
-            this.tBoxLabelA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tBoxLabelA.Margin = new System.Windows.Forms.Padding(4);
             this.tBoxLabelA.Name = "tBoxLabelA";
             this.tBoxLabelA.Size = new System.Drawing.Size(392, 39);
             this.tBoxLabelA.TabIndex = 1;
@@ -325,7 +325,7 @@
             this.tLayoutMessageA.BackColor = System.Drawing.Color.White;
             this.tLayoutMessageA.Controls.Add(this.lblMessage);
             this.tLayoutMessageA.Location = new System.Drawing.Point(4, 477);
-            this.tLayoutMessageA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tLayoutMessageA.Margin = new System.Windows.Forms.Padding(4);
             this.tLayoutMessageA.Name = "tLayoutMessageA";
             this.tLayoutMessageA.Size = new System.Drawing.Size(939, 224);
             this.tLayoutMessageA.TabIndex = 5;
@@ -350,9 +350,9 @@
             this.gbBatchB.Controls.Add(this.tableLayoutPanel4);
             this.gbBatchB.Font = new System.Drawing.Font("MS Reference Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
             this.gbBatchB.Location = new System.Drawing.Point(982, 4);
-            this.gbBatchB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbBatchB.Margin = new System.Windows.Forms.Padding(4);
             this.gbBatchB.Name = "gbBatchB";
-            this.gbBatchB.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbBatchB.Padding = new System.Windows.Forms.Padding(4);
             this.gbBatchB.Size = new System.Drawing.Size(970, 750);
             this.gbBatchB.TabIndex = 1;
             this.gbBatchB.TabStop = false;
@@ -363,6 +363,7 @@
             // 
             this.lblMessage2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblMessage2.AutoSize = true;
+            this.lblMessage2.BackColor = System.Drawing.Color.White;
             this.lblMessage2.Font = new System.Drawing.Font("MS UI Gothic", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMessage2.ForeColor = System.Drawing.Color.White;
             this.lblMessage2.Location = new System.Drawing.Point(211, 609);
@@ -384,7 +385,7 @@
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel4, 0, 5);
             this.tableLayoutPanel4.Controls.Add(this.panelBatchB, 0, 6);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(13, 39);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 7;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.62963F));
@@ -414,7 +415,7 @@
             this.flowLayoutPanel3.Controls.Add(this.tBoxReelB);
             this.flowLayoutPanel3.Controls.Add(this.btnLimpiarB);
             this.flowLayoutPanel3.Location = new System.Drawing.Point(4, 36);
-            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(939, 69);
             this.flowLayoutPanel3.TabIndex = 1;
@@ -435,7 +436,7 @@
             // 
             this.tBoxReelB.BackColor = System.Drawing.SystemColors.Menu;
             this.tBoxReelB.Location = new System.Drawing.Point(153, 4);
-            this.tBoxReelB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tBoxReelB.Margin = new System.Windows.Forms.Padding(4);
             this.tBoxReelB.Name = "tBoxReelB";
             this.tBoxReelB.Size = new System.Drawing.Size(392, 39);
             this.tBoxReelB.TabIndex = 1;
@@ -451,7 +452,7 @@
             this.btnLimpiarB.Font = new System.Drawing.Font("Ebrima", 5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Millimeter);
             this.btnLimpiarB.ForeColor = System.Drawing.Color.Black;
             this.btnLimpiarB.Location = new System.Drawing.Point(553, 4);
-            this.btnLimpiarB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLimpiarB.Margin = new System.Windows.Forms.Padding(4);
             this.btnLimpiarB.Name = "btnLimpiarB";
             this.btnLimpiarB.Size = new System.Drawing.Size(169, 46);
             this.btnLimpiarB.TabIndex = 9;
@@ -464,7 +465,6 @@
             // 
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
-            this.dataGridView2.AllowUserToOrderColumns = true;
             this.dataGridView2.AllowUserToResizeColumns = false;
             this.dataGridView2.AllowUserToResizeRows = false;
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -491,9 +491,10 @@
             this.dataGridView2.EnableHeadersVisualStyles = false;
             this.dataGridView2.GridColor = System.Drawing.SystemColors.ActiveBorder;
             this.dataGridView2.Location = new System.Drawing.Point(4, 113);
-            this.dataGridView2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView2.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.ReadOnly = true;
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle6.Font = new System.Drawing.Font("MS Reference Sans Serif", 15.75F, System.Drawing.FontStyle.Bold);
@@ -522,7 +523,7 @@
             this.flowLayoutPanel4.Controls.Add(this.label9);
             this.flowLayoutPanel4.Controls.Add(this.tBoxLabelB);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(4, 401);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(939, 62);
             this.flowLayoutPanel4.TabIndex = 4;
@@ -543,7 +544,7 @@
             // 
             this.tBoxLabelB.BackColor = System.Drawing.SystemColors.Menu;
             this.tBoxLabelB.Location = new System.Drawing.Point(191, 4);
-            this.tBoxLabelB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tBoxLabelB.Margin = new System.Windows.Forms.Padding(4);
             this.tBoxLabelB.Name = "tBoxLabelB";
             this.tBoxLabelB.Size = new System.Drawing.Size(392, 39);
             this.tBoxLabelB.TabIndex = 1;
@@ -553,7 +554,7 @@
             // 
             this.panelBatchB.BackColor = System.Drawing.Color.White;
             this.panelBatchB.Location = new System.Drawing.Point(4, 471);
-            this.panelBatchB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelBatchB.Margin = new System.Windows.Forms.Padding(4);
             this.panelBatchB.Name = "panelBatchB";
             this.panelBatchB.Size = new System.Drawing.Size(939, 233);
             this.panelBatchB.TabIndex = 5;
@@ -563,7 +564,7 @@
             this.panel1.BackColor = System.Drawing.Color.DarkCyan;
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1964, 171);
             this.panel1.TabIndex = 1;
@@ -599,7 +600,7 @@
             this.tableLayoutPanel5.Controls.Add(this.btnChange, 3, 1);
             this.tableLayoutPanel5.Controls.Add(this.lblVersion, 4, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(4, 178);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -648,7 +649,7 @@
             this.cBoxPartNum.Font = new System.Drawing.Font("Century Gothic", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Millimeter);
             this.cBoxPartNum.FormattingEnabled = true;
             this.cBoxPartNum.Location = new System.Drawing.Point(515, 59);
-            this.cBoxPartNum.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cBoxPartNum.Margin = new System.Windows.Forms.Padding(4);
             this.cBoxPartNum.Name = "cBoxPartNum";
             this.cBoxPartNum.Size = new System.Drawing.Size(357, 42);
             this.cBoxPartNum.TabIndex = 3;
@@ -659,7 +660,7 @@
             this.cBoxWorkOrder.Font = new System.Drawing.Font("Century Gothic", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Millimeter);
             this.cBoxWorkOrder.FormattingEnabled = true;
             this.cBoxWorkOrder.Location = new System.Drawing.Point(880, 59);
-            this.cBoxWorkOrder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cBoxWorkOrder.Margin = new System.Windows.Forms.Padding(4);
             this.cBoxWorkOrder.Name = "cBoxWorkOrder";
             this.cBoxWorkOrder.Size = new System.Drawing.Size(379, 42);
             this.cBoxWorkOrder.TabIndex = 4;
@@ -675,7 +676,7 @@
             this.btnChange.Font = new System.Drawing.Font("Ebrima", 5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Millimeter);
             this.btnChange.ForeColor = System.Drawing.Color.Black;
             this.btnChange.Location = new System.Drawing.Point(1267, 60);
-            this.btnChange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnChange.Margin = new System.Windows.Forms.Padding(4);
             this.btnChange.Name = "btnChange";
             this.btnChange.Size = new System.Drawing.Size(169, 46);
             this.btnChange.TabIndex = 7;
@@ -710,11 +711,11 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "HPC EXPANDO";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load_1);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);

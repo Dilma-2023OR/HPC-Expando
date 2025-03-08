@@ -4,3 +4,8 @@
 07-03-2025 13:06:35Serial 1000000096 YA registrado:'1000000096' is already registered.  Please revise input selections accordingly.
 07-03-2025 13:11:29,Pase NO otorgado al serial 1000000096:Cannot process inventory consumption for serial 2434022418, part-rev 302282X040-02: not set as consumable.
 07-03-2025 13:30:27,Error al consultar el status del serial 1000000138	:Índice fuera de los límites de la matriz.
+08-03-2025 08:34:09La etiqueta: 2510006265, No pertenece a HPC Expando.
+08-03-2025 09:25:22La etiqueta: 2510006030, No pertenece a HPC Expando.
+08-03-2025 09:27:13La etiqueta: 2510006030, No pertenece a HPC Expando.
+08-03-2025 09:57:46,Error al obtener la configuración:No se pudo encontrar el archivo 'G:\programs\LABVIEW\MES (RUNCARD)\A. Production Apps\HPC\HPC Expandor\HPCExpando2\HPCExpando2\bin\Debug\config.ini'.
+08-03-2025 10:49:53Serial 5207000027 YA registrado:'5207000027' is already registered.  Please revise input selections accordingly.

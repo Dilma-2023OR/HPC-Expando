@@ -412,6 +412,7 @@ namespace HPCExpando2
         {
             if (e.KeyCode == Keys.Enter & tBoxReelA.Text != string.Empty)
             {
+
                 try
                 {
                     //Boleana
@@ -419,6 +420,7 @@ namespace HPCExpando2
 
                     //Almacena el valor escaneado
                     string scanInfo = "";
+                    errExpendor = 0;
 
                     tBoxLabelA.Enabled = false;
                     valExist = false;
@@ -482,10 +484,10 @@ namespace HPCExpando2
                                             string PART = dataGridView1.Rows[x].Cells[0].Value.ToString();
                                             string REVISION = dataGridView1.Rows[x].Cells[1].Value.ToString();
                                             //Si el valor de la posicion contiene el número de parte y revisión
-                                            if(PART == fetchInv[0].partnum & REVISION == fetchInv[0].partrev)
+                                            if (PART == fetchInv[0].partnum & REVISION == fetchInv[0].partrev)
                                             {
                                                 //Si la posicion de la tabla no ha sido asignado
-                                                if (dataGridView1.Rows[x].Cells[2].Value.ToString() == "-" & dataGridView1.Rows[x].Cells[3].Value.ToString() =="-")
+                                                if (dataGridView1.Rows[x].Cells[2].Value.ToString() == "-" & dataGridView1.Rows[x].Cells[3].Value.ToString() == "-")
                                                 {
                                                     //Añade los datos 
                                                     dataGridView1.Rows[x].Cells[2].Value = serial;
@@ -498,7 +500,8 @@ namespace HPCExpando2
                                                     message1.ShowDialog();
                                                     break;
                                                 }
-                                            }else if (dataGridView1.Rows[x].Cells[0].Value.ToString().Contains(partNum) & !dataGridView1.Rows[x].Cells[1].Value.ToString().Contains(partRev))
+                                            }
+                                            else if (dataGridView1.Rows[x].Cells[0].Value.ToString().Contains(partNum) & !dataGridView1.Rows[x].Cells[1].Value.ToString().Contains(partRev))
                                             {
                                                 Message message2 = new Message("El número de parte escaneado no pertenece al BOM " + scanInfo + "," + partNum + "-" + partRev + ", notificar.");
                                                 message2.ShowDialog();
@@ -532,6 +535,8 @@ namespace HPCExpando2
                                 errExpendor = 1;
                             }
                         }
+                        
+                        
                         tLayoutMessageA.BackColor = Color.White;
                         lblMessage.Text = "";
 
@@ -552,15 +557,13 @@ namespace HPCExpando2
                             tBoxReelA.Clear();
                             tBoxReelA.Focus();
                         }
-                        
-                        
                     }
                     catch (Exception ex)
                     {
                         //Log
-                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.\n");
+                        File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + scanInfo + ", El escaneo no pertenece al BOM.\n");
 
-                        Message message = new Message(scanInfo + ", El escaneo no pertenece al BOM, no es UNIQUE ID.");
+                        Message message = new Message(scanInfo + ", El escaneo no pertenece al BOM.");
                         message.ShowDialog();
                         errExpendor = 1;
                         
@@ -577,37 +580,67 @@ namespace HPCExpando2
         {
             if (e.KeyCode == Keys.Enter & tBoxLabelA.Text != string.Empty) {
 
-                BatchBActivo = false;
-                //temporal Data
-                int response = 0;
-
-                //Register Unit
-                serialRegister(tBoxLabelA.Text, out  response);
-
-                if (response != 0) {
-                    //Control Adjust
-                    tBoxLabelA.Clear();
-                    tBoxLabelA.Focus();
-                    return;
+                string scanInfo = "";
+                //reiniciamos la bandera de error
+                errExpendor = 0;
+                foreach (char c in tBoxLabelA.Text) {
+                    if (!char.IsControl(c)) { 
+                        scanInfo = scanInfo + c;
+                    }
                 }
 
-                //Transaction Unit
-                serialTransaction(tBoxLabelA.Text, out response);
+                if (scanInfo.StartsWith("52"))
+                {
+                    BatchBActivo = false;
+                    //temporal Data
+                    int response = 0;
 
-                if (response != 0) {
+                    //Register Unit
+                    serialRegister(tBoxLabelA.Text, out response);
+
+                    if (response != 0)
+                    {
+                        //Control Adjust
+                        tBoxLabelA.Clear();
+                        tBoxLabelA.Focus();
+                        return;
+                    }
+
+                    //Transaction Unit
+                    serialTransaction(tBoxLabelA.Text, out response);
+
+                    if (response != 0)
+                    {
+                        //Control Adjust
+                        tBoxLabelA.Clear();
+                        tBoxLabelA.Focus();
+                        return;
+                    }
+
                     //Control Adjust
+                    tBoxLabelA.Enabled = false;
+                    tBoxReelA.Enabled = false;
                     tBoxLabelA.Clear();
-                    tBoxLabelA.Focus();
-                    return;
+                    tBoxReelA.Clear();
+                    tBoxReelB.Enabled = true;
+                    tBoxReelB.Focus();
+                }
+                else
+                {
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "La etiqueta: " + scanInfo + ", No pertenece a HPC Expando.\n");
+
+                    Message message = new Message("La etiqueta: " + scanInfo + ", No pertenece a HPC Expando.");
+                    message.ShowDialog();
+                    errExpendor = 1;
                 }
 
-                //Control Adjust
-                tBoxLabelA.Enabled = false;
-                tBoxReelA.Enabled = false;
-                tBoxLabelA.Clear();
-                tBoxReelA.Clear();
-                tBoxReelB.Enabled = true;
-                tBoxReelB.Focus();
+                if (errExpendor == 1) {
+                    tBoxLabelA.Enabled = true;
+                    tBoxLabelA.Clear();
+                    tBoxLabelA.Focus();
+                }
+                
             }
         }
 
@@ -636,18 +669,18 @@ namespace HPCExpando2
                     return;
                 }
 
-                if (msg.Contains("is already registered"))
-                {
-                    //Retroalimentación 
-                    Message message = new Message("Serial " + serial + " Ya registrado");
-                    message.ShowDialog();
+                //if (msg.Contains("is already registered"))
+                //{
+                //    //Retroalimentación 
+                //    Message message = new Message("Serial " + serial + " Ya registrado");
+                //    message.ShowDialog();
 
-                    //Log
-                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "Serial " + serial + " YA registrado:" + msg + "\n");
+                //    //Log
+                //    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "Serial " + serial + " YA registrado:" + msg + "\n");
 
-                    response = -1;
-                    return;
-                }
+                //    response = -1;
+                //    return;
+                //}
             }
             catch (Exception ex) {
                 //Feedback
@@ -757,18 +790,11 @@ namespace HPCExpando2
                                         {
                                             cantidad = (cantidad - Convert.ToInt32(part.qty));
                                             //Si el id expiro
-                                            if (cantidad <= 0)
-                                            {
-                                                //Reinicia los valores del campo
-                                                dataGridView1.Rows[x].Cells[2].Value = "-";
-                                                dataGridView1.Rows[x].Cells[3].Value = "-";
 
-                                                //
-                                                partToRemove.Add(part.partnum);
+                                            //Reinicia los valores del campo
+                                            dataGridView1.Rows[x].Cells[2].Value = "-";
+                                            dataGridView1.Rows[x].Cells[3].Value = "-";
 
-                                                tBoxLabelA.Enabled = true;
-                                            }
-                                            dataGridView1.Rows[x].Cells[3].Value = Convert.ToString(cantidad);
                                         }
                                         break;
                                     }
@@ -813,19 +839,10 @@ namespace HPCExpando2
                                         {
                                             cantidad = (cantidad - Convert.ToInt32(part.qty));
                                             //Si el id expiro
-                                            if (cantidad <= 0)
-                                            {
-                                                //Reinicia los valores del campo
-                                                dataGridView2.Rows[x].Cells[2].Value = "-";
-                                                dataGridView2.Rows[x].Cells[3].Value = "-";
-
-                                                //
-                                                partToRemove.Add(part.partnum);
-
-                                                tBoxLabelB.Enabled = true;
-                                            }
-                                            dataGridView2.Rows[x].Cells[3].Value = Convert.ToString(cantidad);
-                                        }
+                                            //Reinicia los valores del campo
+                                            dataGridView2.Rows[x].Cells[2].Value = "-";
+                                            dataGridView2.Rows[x].Cells[3].Value = "-";
+                                         }
                                         break;
                                     }
                                 }
@@ -858,6 +875,7 @@ namespace HPCExpando2
                             lblMessage2.Text = "Pase NO otorgado al serial " + serial;
                             panelBatchB.BackColor = Color.Crimson;
                             MostrarMensajeFlotanteNoPass(" NO PASS");
+                            errExpendor = 0;
                         }
 
                         //Log
@@ -998,7 +1016,8 @@ namespace HPCExpando2
 
                     //Almacena el valor escaneado
                     string scanInfo = "";
-
+                    //reiniciamos la bandera de error
+                    errExpendor = 0;
                     tBoxLabelB.Enabled = false;
                     valExist = false;
 
@@ -1160,39 +1179,68 @@ namespace HPCExpando2
         {
             if (e.KeyCode == Keys.Enter & tBoxLabelB.Text != string.Empty)
             {
-                BatchBActivo = true;
-                //temporal Data
-                int response = 0;
+                string scanInfo = "";
+                errExpendor = 0;
 
-                //Register Unit
-                serialRegister(tBoxLabelB.Text, out response);
-
-                if (response != 0)
-                {
-                    //Control Adjust
-                    tBoxLabelB.Clear();
-                    tBoxLabelB.Focus();
-                    return;
+                foreach (char c in tBoxLabelB.Text) {
+                    if (!char.IsControl(c)) { 
+                        scanInfo = scanInfo + c;
+                    }
                 }
 
-                //Transaction Unit
-                serialTransaction(tBoxLabelB.Text, out response);
-
-                if (response != 0)
+                if (scanInfo.StartsWith("52"))
                 {
+                    BatchBActivo = true;
+                    //temporal Data
+                    int response = 0;
+
+                    //Register Unit
+                    serialRegister(tBoxLabelB.Text, out response);
+
+                    if (response != 0)
+                    {
+                        //Control Adjust
+                        tBoxLabelB.Clear();
+                        tBoxLabelB.Focus();
+                        return;
+                    }
+
+                    //Transaction Unit
+                    serialTransaction(tBoxLabelB.Text, out response);
+
+                    if (response != 0)
+                    {
+                        //Control Adjust
+                        tBoxLabelB.Clear();
+                        tBoxLabelB.Focus();
+                        return;
+                    }
+
                     //Control Adjust
+                    tBoxLabelA.Enabled = false;
+                    tBoxReelA.Enabled = true;
                     tBoxLabelB.Clear();
-                    tBoxLabelB.Focus();
-                    return;
+                    tBoxReelB.Clear();
+                    tBoxReelB.Enabled = false;
+                    tBoxReelA.Focus();
+                    tBoxLabelB.Enabled = false;
+                }
+                else
+                {
+                    //Log
+                    File.AppendAllText(Directory.GetCurrentDirectory() + @"\errorLog.txt", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + "La etiqueta: " + scanInfo + ", No pertenece a HPC Expando.\n");
+
+                    Message message = new Message("La etiqueta: " + scanInfo + ", No pertenece a HPC Expando.");
+                    message.ShowDialog();
+                    errExpendor = 1;
                 }
 
-                //Control Adjust
-                tBoxLabelA.Enabled = false;
-                tBoxReelA.Enabled = true;
-                tBoxLabelB.Clear();
-                tBoxReelB.Clear();
-                tBoxReelB.Enabled = false;
-                tBoxReelA.Focus();
+                if (errExpendor == 1)
+                {
+                    tBoxLabelB.Enabled = true;
+                    tBoxLabelB.Clear();
+                    tBoxLabelB.Focus();
+                }
             }
         }
 
@@ -1285,22 +1333,12 @@ namespace HPCExpando2
 
         private void lblMessage_TextChanged(object sender, EventArgs e)
         {
-            //Timer Stop
-            timerTextReset.Stop();
-
-            //Control Adjust
-            tLayoutMessageA.BackColor = Color.White;
-            lblMessage.Text = string.Empty;
+            timerTextReset.Start();
         }
 
         private void lblMessage2_TextChanged(object sender, EventArgs e)
         {
-            //Timer Stop
-            timerTextReset.Stop();
-
-            //Control Adjust
-            panelBatchB.BackColor = Color.White;
-            lblMessage2.Text = string.Empty;
+            timerTextReset.Start();
         }
     }
 }

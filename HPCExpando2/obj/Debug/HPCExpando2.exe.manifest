@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HPCExpando2.exe" size="427944">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="HPCExpando2.exe" size="428456">
       <assemblyIdentity name="HPCExpando2" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>O1hZUltfKaU64+zhfCkwIVLDSFrNDx8NyBGIil7hVcI=</dsig:DigestValue>
+        <dsig:DigestValue>F7MaSrqV+SjetCwFZTSDQZqVq3GtSEIgtHFZCj0FSwY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
